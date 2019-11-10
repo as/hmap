@@ -22,6 +22,7 @@ func (h *M) Del(k string) (interface{}, bool) {
 	}
 	return h.get(k, true)
 }
+
 type n struct {
 	k string
 	v string
@@ -29,5 +30,22 @@ type n struct {
 }
 
 func (h *M) put(k, v string) {}
-func (h *M) get(k string, del bool) (interface{}, bool) {}
+func (h *M) get(k string, del bool) (interface{}, bool) {
+	hv := hash(k) & (len(h.b) - 1)
+	prev := h.b[hv]
+	for n := h.b[hv]; n != nil; n = n.p {
+		if n.k == k {
+			if del {
+				prev.p = n.p
+				n.p = nil
+				if n == h.b[hv] {
+					h.b[hv] = nil
+				}
+				h.len--
+			}
+			return n.v, true
+		}
+	}
+	return nil, false
+}
 func (h *M) ensure() {}
