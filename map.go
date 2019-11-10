@@ -31,6 +31,14 @@ type n struct {
 
 func (h *M) put(k, v string) {
 	hv := hash(k) & (len(h.b) - 1)
+/*
+always add the new value to head since its simpler code. 
+if this becomes concurrent we know only the head of the
+list can change from underneath us. a cas spin on the
+head pointer will ensure that head is updated. however,
+the next pointer will also have to be updated.
+
+*/
 	p := n{k: k, v: v, p: h.b[hv]}
 	h.b[hv] = &p
 	h.len++
