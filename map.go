@@ -29,7 +29,12 @@ type n struct {
 	p *n
 }
 
-func (h *M) put(k, v string) {}
+func (h *M) put(k, v string) {
+	hv := hash(k) & (len(h.b) - 1)
+	p := n{k: k, v: v, p: h.b[hv]}
+	h.b[hv] = &p
+	h.len++
+}
 func (h *M) get(k string, del bool) (interface{}, bool) {
 	hv := hash(k) & (len(h.b) - 1)
 	prev := h.b[hv]
