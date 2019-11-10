@@ -53,4 +53,24 @@ func (h *M) get(k string, del bool) (interface{}, bool) {
 	}
 	return nil, false
 }
-func (h *M) ensure() {}
+func (h *M) ensure() {
+	if h.cap > h.len/2 {
+		return
+	}
+	tmp := h.b
+	if h.cap == 0 {
+		h.cap = 32
+	} else if h.cap > 4*h.len {
+		// too big
+		h.cap /= 2
+	} else {
+		h.cap *= 2
+	}
+	h.len = 0
+	h.b = make([]*n, h.cap)
+	for _, n := range tmp {
+		for ; n != nil; n = n.p {
+			h.put(n.k, n.v)
+		}
+	}
+}
