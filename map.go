@@ -40,6 +40,11 @@ the next pointer will also have to be updated.
 
 */
 	p := n{k: k, v: v, p: h.b[hv]}
+
+/*
+if below cas fails, we are no longer head. need to
+go to the last operation and try again
+*/
 	h.b[hv] = &p
 	h.len++
 }
