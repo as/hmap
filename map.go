@@ -11,3 +11,7 @@ type n struct {
 	v string
 	p *n
 }
+
+func (h *M) put(k, v string) {}
+func (h *M) get(k string, del bool) (interface{}, bool) {}
+func (h *M) ensure() {}}
